@@ -1,3 +1,4 @@
+-- SQLBook: Code
 
 -- Create database (run this separately)
 -- CREATE DATABASE algcit_dorm;
