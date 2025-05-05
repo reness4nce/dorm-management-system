@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from '@/components/ui/label';
 import { Sparkles, Info } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -56,7 +57,7 @@ const Login = () => {
             <span className="inline-block transform hover:scale-105 transition-transform duration-300 delay-400">I</span>
             <span className="inline-block transform hover:scale-105 transition-transform duration-300 delay-500">T</span>
             <span className="inline-block transform hover:scale-105 transition-transform duration-300 delay-50"> </span>
-            <span className="inline-block transform hover:scale-105 transition-transform duration-300 delay-600 text-amber-950"> D</span>
+            <span className="inline-block transform hover:scale-105 transition-transform duration-300 delay-600 text-amber-950"> D</span>
             <span className="inline-block transform hover:scale-105 transition-transform duration-300 delay-700">O</span>
             <span className="inline-block transform hover:scale-105 transition-transform duration-300 delay-800">R</span>
             <span className="inline-block transform hover:scale-105 transition-transform duration-300 delay-900 text-red-950">M</span>

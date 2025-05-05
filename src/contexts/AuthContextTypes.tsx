@@ -32,4 +32,3 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     );
 };
 
-// Removed useAuth hook. It has been moved to src/hooks/useAuth.ts

@@ -1,12 +1,20 @@
-
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { Pool } = require('pg'); // Import pg for Neon
 const router = express.Router();
+
+// Create a connection pool for Neon
+const pool = new Pool({
+  connectionString: process.env.NEON_DATABASE_URL, // Use Neon connection string from environment variables
+  ssl: {
+    rejectUnauthorized: false, // Ensure SSL is enabled for Neon
+  },
+});
 
 // Middleware to get database connection
 const getDb = (req, res, next) => {
-  req.db = req.app.get('db');
+  req.db = pool; // Use the Neon connection pool
   next();
 };
 
@@ -14,7 +22,7 @@ const getDb = (req, res, next) => {
 router.post('/login', getDb, async (req, res) => {
   try {
     const { username, password } = req.body;
-    
+
     // Validate input
     if (!username || !password) {
       return res.status(400).json({ error: 'Username and password are required' });
@@ -25,33 +33,33 @@ router.post('/login', getDb, async (req, res) => {
       'SELECT * FROM users WHERE username = $1',
       [username]
     );
-    
+
     const user = result.rows[0];
-    
+
     // Check if user exists
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
-    
+
     // Check password
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
-    
+
     // Create JWT token
     const token = jwt.sign(
-      { 
-        id: user.id, 
-        username: user.username, 
-        role: user.role 
-      }, 
+      {
+        id: user.id,
+        username: user.username,
+        role: user.role,
+      },
       process.env.JWT_SECRET,
-      { 
-        expiresIn: process.env.JWT_EXPIRES_IN 
+      {
+        expiresIn: process.env.JWT_EXPIRES_IN,
       }
     );
-    
+
     // Return user data without password
     res.json({
       token,
@@ -61,8 +69,8 @@ router.post('/login', getDb, async (req, res) => {
         role: user.role,
         firstName: user.first_name,
         lastName: user.last_name,
-        email: user.email
-      }
+        email: user.email,
+      },
     });
   } catch (err) {
     console.error('Login error:', err);
@@ -78,26 +86,26 @@ router.get('/me', getDb, async (req, res) => {
     if (!token) {
       return res.status(401).json({ error: 'No token provided' });
     }
-    
+
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const result = await req.db.query(
       'SELECT id, username, role, first_name, last_name, email FROM users WHERE id = $1',
       [decoded.id]
     );
-    
+
     const user = result.rows[0];
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
-    
+
     res.json({
       id: user.id,
       username: user.username,
       role: user.role,
       firstName: user.first_name,
       lastName: user.last_name,
-      email: user.email
+      email: user.email,
     });
   } catch (err) {
     if (err.name === 'JsonWebTokenError') {

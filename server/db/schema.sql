@@ -1,5 +1,3 @@
--- SQLBook: Code
-
 -- Create database (run this separately)
 -- CREATE DATABASE algcit_dorm;
 
@@ -15,28 +13,28 @@ DROP TABLE IF EXISTS users;
 -- Create users table
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
-  username VARCHAR(255) UNIQUE NOT NULL,
-  password VARCHAR(255) NOT NULL,
-  role VARCHAR(50) NOT NULL,
-  first_name VARCHAR(255) NOT NULL,
-  last_name VARCHAR(255) NOT NULL,
-  email VARCHAR(255) UNIQUE NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  username TEXT UNIQUE NOT NULL,
+  password TEXT NOT NULL,
+  role TEXT NOT NULL,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT now()
 );
 
 -- Create residents table
 CREATE TABLE residents (
   id SERIAL PRIMARY KEY,
-  first_name VARCHAR(255) NOT NULL,
-  last_name VARCHAR(255) NOT NULL,
-  student_id VARCHAR(255) UNIQUE NOT NULL,
-  strand VARCHAR(255) NOT NULL,
-  grade_level VARCHAR(10) NOT NULL,
-  contact_number VARCHAR(255) NOT NULL,
-  room_number VARCHAR(50) NOT NULL,
-  checkout_status VARCHAR(50) DEFAULT 'none',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
+  student_id TEXT UNIQUE NOT NULL,
+  strand TEXT NOT NULL,
+  grade_level TEXT NOT NULL,
+  contact_number TEXT NOT NULL,
+  room_number TEXT NOT NULL,
+  checkout_status TEXT DEFAULT 'none',
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
 );
 
 -- Create checkout forms table
@@ -48,25 +46,25 @@ CREATE TABLE checkout_forms (
   intended_time TIME NOT NULL,
   return_date DATE,
   return_time TIME,
-  submission_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  status VARCHAR(50) DEFAULT 'pending',
-  approved_by VARCHAR(255),
-  approval_date TIMESTAMP,
+  submission_date TIMESTAMPTZ DEFAULT now(),
+  status TEXT DEFAULT 'pending',
+  approved_by TEXT,
+  approval_date TIMESTAMPTZ,
   notes TEXT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
 );
 
 -- Create clearance items table
 CREATE TABLE clearance_items (
   id SERIAL PRIMARY KEY,
   checkout_form_id INTEGER REFERENCES checkout_forms(id) ON DELETE CASCADE,
-  name VARCHAR(255) NOT NULL,
+  name TEXT NOT NULL,
   is_completed BOOLEAN DEFAULT FALSE,
-  completed_by VARCHAR(255),
-  completed_date TIMESTAMP,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  completed_by TEXT,
+  completed_date TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
 );
 
 -- Add indexes

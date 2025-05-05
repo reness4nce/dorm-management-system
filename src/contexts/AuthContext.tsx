@@ -1,9 +1,6 @@
-
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import { User } from '../types';
 import { toast } from 'sonner';
-// Remove the incorrect import as the file '../types/AuthContextTypes' does not exist.
-// Instead, define the AuthContextType inline or ensure the correct path and file exist.
 
 interface AuthContextType {
   currentUser: User | null;
@@ -15,6 +12,8 @@ interface AuthContextType {
   isResident: boolean;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
+export const useAuth = () => React.useContext(AuthContext);
 // Sample users for demo purposes
 const SAMPLE_USERS: User[] = [
   {
@@ -66,13 +65,10 @@ export const AuthContext = createContext<AuthContextType>({
   isResident: false
 });
 
-// Removed useAuth hook to comply with Fast Refresh requirements.
-
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   useEffect(() => {
-    // Check if user is already logged in (via localStorage)
     const savedUser = localStorage.getItem('dormUser');
     if (savedUser) {
       try {
@@ -85,7 +81,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (username: string, password: string): Promise<boolean> => {
-    // First check for standard admin/staff accounts
     const user = SAMPLE_USERS.find(
       u => u.username === username && u.password === password
     );

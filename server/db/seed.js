@@ -1,4 +1,3 @@
-
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 const dotenv = require('dotenv');
@@ -6,7 +5,10 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL
+  connectionString: process.env.NEON_DATABASE_URL, // Use Neon-specific connection string
+  ssl: {
+    rejectUnauthorized: false // Ensure SSL is enabled for Neon
+  }
 });
 
 const seedDatabase = async () => {
